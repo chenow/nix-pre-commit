@@ -44,3 +44,6 @@ Here is an example of a `flake.nix` file using pre-commit-env
 When entering a dev shell, Nix-pre-commit will create a default `.pre-commit-config.yaml` configuration file, as well as installing git hooks.
 
 Now, git hooks will be triggered based on your configuration (i.e. at each git commit and push if you left untouched the default configuration).
+
+![Example of running default hooks
+](imgs/run-hooks-example.png "Example of running default hooks")
