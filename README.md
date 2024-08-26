@@ -1,3 +1,12 @@
+# Nix-pre-commit
+
+Nix module providing a dev shell with pre-commit installed, and a setup of default hooks.
+
+## Installation
+
+Here is an example of a `flake.nix` file using pre-commit-env
+
+```nix
 {
   description = "Your project description";
 
@@ -10,19 +19,28 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, pre-commit-env, ... }:
+  outputs = { self, nixpkgs, flake-utils, pre-commit-env, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        devShells.default = pre-commit-env.lib.${system}.mkDevShell {
-          extraPackages = with pkgs; [
-            # add your packages here...
-          ];
+        pre-commit-lib =
+          import "${pre-commit-env}/libs/dev-shell.nix" { inherit pkgs; };
+      in {
+        devShells.default = pre-commit-lib.mkDevShell {
+          extraPackages = with pkgs;
+            [
+              # Add any extra packages you need here
+            ];
           extraShellHook = ''
-            echo "Welcome to the pre-commit development environment!"
+            # Add any extra shell commands you want to run here
           '';
         };
       });
 }
+```
+
+## Usage
+
+When entering a dev shell, Nix-pre-commit will create a default `.pre-commit-config.yaml` configuration file, as well as installing git hooks.
+
+Now, git hooks will be triggered based on your configuration (i.e. at each git commit and push if you left untouched the default configuration).
