@@ -19,24 +19,33 @@ Here is an example of a `flake.nix` file using pre-commit-env
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, pre-commit-env, ... }@inputs:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      pre-commit-env,
+      ...
+    }@inputs:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        pre-commit-lib =
-          import "${pre-commit-env}/libs/dev-shell.nix" { inherit pkgs; };
-      in {
+        pre-commit-lib = pre-commit-env.lib.${system};
+      in
+      {
         devShells.default = pre-commit-lib.mkDevShell {
-          extraPackages = with pkgs;
-            [
-              # Add any extra packages you need here
-            ];
+          extraPackages = with pkgs; [
+            # Add any extra packages you need here
+          ];
           extraShellHook = ''
             # Add any extra shell commands you want to run here
           '';
         };
-      });
+      }
+    );
 }
+
 ```
 
 ## Usage

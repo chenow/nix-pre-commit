@@ -5,7 +5,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
-
   outputs =
     {
       self,
@@ -17,10 +16,16 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        lib = import ./libs/dev-shell.nix { inherit pkgs; };
       in
       {
-        devShells.default = lib.mkDevShell { };
+        # Exposure of the dev-shell
+        lib = {
+          mkDevShell = import ./libs/dev-shell.nix { inherit pkgs; };
+        };
+
+        # Self use of the dev-shell
+        devShells.default = self.lib.${system}.mkDevShell { };
+
         formatter = pkgs.nixfmt-rfc-style;
       }
     );
