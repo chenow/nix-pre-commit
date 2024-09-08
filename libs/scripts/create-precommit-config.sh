@@ -15,6 +15,7 @@ repos:
     rev: v8.18.1
     hooks:
       - id: gitleaks
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
@@ -22,8 +23,8 @@ repos:
       - id: check-json
       - id: check-added-large-files
       - id: trailing-whitespace
-        exclude: '\.json$'
       - id: end-of-file-fixer
+        exclude: '\.json$'
       - id: check-merge-conflict
         args: [--assume-in-merge]
 
