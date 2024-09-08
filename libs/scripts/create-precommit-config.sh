@@ -28,6 +28,13 @@ repos:
       - id: check-merge-conflict
         args: [--assume-in-merge]
 
+  - repo: local
+    hooks:
+      - id: nix-fmt
+        name: nix-fmt
+        language: system
+        entry: nix fmt
+
 EOF
 )
     echo "${config_content}" > "${CONFIG_FILE}"
